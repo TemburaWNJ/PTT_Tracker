@@ -1,0 +1,26 @@
+name: PTT PS5 Pro Monitor
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'  # 每 15 分鐘跑一次
+  workflow_dispatch:      # 允許手動點擊測試
+
+jobs:
+  run-monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout代碼
+        uses: actions/checkout@v3
+
+      - name: 設定 Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: 安裝套件
+        run: pip install requests beautifulsoup4
+
+      - name: 執行監控
+        env:
+          GOOGLE_CHAT_WEBHOOK: ${{ secrets.GOOGLE_CHAT_WEBHOOK }}
+        run: python monitor.py
